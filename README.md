@@ -32,6 +32,7 @@
 * Maven
 * Hibernate
 * PostgreSQL
+* Liquibase
 * Lombok
 * JSOUP
 * Apache Lucene
