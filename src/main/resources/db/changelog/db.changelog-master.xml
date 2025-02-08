@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="createStatusType" author="user">
+        <sql>
+            CREATE TYPE status AS ENUM (
+            'INDEXING',
+            'INDEXED',
+            'FAILED'
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="createSiteTable" author="user">
+        <createTable tableName="site">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="status" type="status">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_error" type="TEXT"/>
+            <column name="url" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createPageTable" author="user">
+        <createTable tableName="page">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="site_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="mediumtext">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createLemmaTable" author="user">
+        <createTable tableName="lemma">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="site_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lemma" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createIndexesTable" author="user">
+        <createTable tableName="indexes">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="page_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lemma_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ranks" type="float">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
