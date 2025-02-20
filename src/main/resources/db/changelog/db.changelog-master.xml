@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="createStatusType" author="user">
+    <changeSet id="createStatusType" author="postgres">
         <sql>
             CREATE TYPE status AS ENUM (
             'INDEXING',
@@ -13,7 +13,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="createSiteTable" author="user">
+    <changeSet id="createSiteTable" author="postgres">
         <createTable tableName="site">
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
@@ -30,7 +30,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createPageTable" author="user">
+    <changeSet id="createPageTable" author="postgres">
         <createTable tableName="page">
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
@@ -50,7 +50,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createLemmaTable" author="user">
+    <changeSet id="createLemmaTable" author="postgres">
         <createTable tableName="lemma">
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
@@ -67,7 +67,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createIndexesTable" author="user">
+    <changeSet id="createIndexesTable" author="postgres">
         <createTable tableName="indexes">
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
@@ -82,6 +82,48 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="addForeignKeyPageSite" author="postgres">
+        <addForeignKeyConstraint
+                baseTableName="page"
+                baseColumnNames="site_id"
+                referencedTableName="site"
+                referencedColumnNames="id"
+                constraintName="fk_page_site"/>
+    </changeSet>
+
+    <changeSet id="addForeignKeyLemmaSite" author="postgres">
+        <addForeignKeyConstraint
+                baseTableName="lemma"
+                baseColumnNames="site_id"
+                referencedTableName="site"
+                referencedColumnNames="id"
+                constraintName="fk_lemma_site"/>
+    </changeSet>
+
+    <changeSet id="addForeignKeyIndexesLemma" author="postgres">
+        <addForeignKeyConstraint
+                baseTableName="indexes"
+                baseColumnNames="lemma_id"
+                referencedTableName="lemma"
+                referencedColumnNames="id"
+                constraintName="fk_indexes_lemma"/>
+    </changeSet>
+
+    <changeSet id="addForeignKeyIndexesPage" author="postgres">
+        <addForeignKeyConstraint
+                baseTableName="indexes"
+                baseColumnNames="page_id"
+                referencedTableName="page"
+                referencedColumnNames="id"
+                constraintName="fk_indexes_page"/>
+    </changeSet>
+
+    <changeSet id="createIndexPath" author="postgres">
+        <createIndex tableName="page" indexName="idx_path" unique="false">
+            <column name="path"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
